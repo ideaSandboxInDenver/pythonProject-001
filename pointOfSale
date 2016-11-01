@@ -1,0 +1,132 @@
+# Restaurant Point of Sale Application - Python
+
+import pickle
+import restaurantObjects
+
+RESTAURANT = 'Terrific Tacos'
+FILENAME = 'the_kitchen_used.dat'
+TAXRATE = .08
+
+def main():
+
+    # header identifies company name
+    display_restaurantInfo()
+
+    # take the food orders and write to a binary file for kitchen
+    takingFoodOrders()
+
+
+# header identifies company name
+def display_restaurantInfo():
+    print('Welcome to the', RESTAURANT, 'Point of Sale System')
+    print('where we put sauce on EVERYTHING!! Not kidding.')
+    print('----------------------------------------------------')
+    print('We offer these dishes to our sauce-loving customers:')
+    print('Tacos. Burritos. Chimichangas. Nachos. Taco Salads.')
+
+# take the food orders and write to a binary file for kitchen
+def takingFoodOrders():
+    try:
+
+        # open a file.
+        output_file = open(FILENAME, 'wb')
+
+        # ask how many guests are at the restaurant table
+        # get data from user.
+        guestTotal = int(input('\nHow many guest(s) at this table?: '))
+
+        iterate = guestTotal + 1
+        subtotal = 0
+        addTax = 0
+        total = 0
+
+        # loop begins
+        for count in range(1, iterate):
+
+                # get the dishName, proteinChoice, side, sauce, 
+                # price for an order
+                print('\nEnter the dish for guest number ' + str(count) + ':')
+                dishType = input('Dish Ordered?: ')
+                proteinChoice = input('Protein? (Beef/Chicken/Shrimp?): ')
+                sauce = input('Sauce? (Red/Green): ')
+                side = input('Side Dish Choice? (Rice/Beans): ')
+                price = float(input('Dish Price ($XX.XX): $'))
+                
+                subtotal += price
+                addTax = subtotal*TAXRATE
+                total = subtotal + addTax
+
+                # create an Order object named
+                guestFood = restaurantObjects.Smothered(dishType, proteinChoice, sauce, side, price) # matches smothered food class in restaurantObj
+
+                # pickle the object and write it to the file.
+                pickle.dump(guestFood, output_file)
+
+        # close the file
+        output_file.close()
+        print('\nThe order has been sent to', FILENAME)
+
+        # Print the total bill for the customer.
+        print('\nSubtotal:\t\t$', format(subtotal, '10,.2f'), sep='')
+        print('(Tax: ', format(TAXRATE, ',.2f'),'%)', '\t\t$', format(addTax, '10,.2f'), sep='')
+        print('-----------------------------------')
+        print('Total:\t\t\t$', format(total, '10,.2f'), sep='')
+    
+        viewTotalOrder()
+
+    except ValueError:
+        print('Non-numeric data entered. An error has occurred')
+
+def displaySales():
+
+    end_of_file = False # to indicate end of file
+
+    # open file
+    input_file = open(FILENAME, 'rb')
+
+    # read  to end of the file
+    while not end_of_file:
+        try:
+            # unpickle the next object
+            guestFood = pickle.load(input_file)
+
+            # display the food ordered
+            display_data(guestFood)
+
+        except EOFError:
+            # set flag to indicate the end of file has been reached
+            end_of_file = True
+
+    # close the file
+    input_file.close()
+
+    print('-----------------------------------')
+    print('\nThank you for using our system.')
+
+
+# display_data function displays the data from the
+# restaurantInfo object passed as an argument
+def display_data(guestFood):
+    print('\nDish:', guestFood.get_dishType())
+    print('Protein:', guestFood.get_proteinChoice())
+    print('Sauce:', guestFood.get_sauce())
+    print('Side:', guestFood.get_side())
+    print('Price: $', format(guestFood.get_price(), ',.2f'), sep='')
+
+
+# give user choice to see total order sent to kitchen
+def viewTotalOrder():
+    
+    choice = input('\nView the complete order? (y/n): ')
+
+    if choice.lower() == 'y':
+        
+        print('\nGreat! This is the complete order:')
+        print('-----------------------------------')        
+        displaySales()
+        
+    else:
+        print('\nThank you for using our system.')
+
+# call main
+main()
