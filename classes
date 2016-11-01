@@ -1,0 +1,76 @@
+# Restaurant Point of Sale Application
+# classes
+
+# The food class holds general data about food at the restaurant
+
+class Food:
+    # __init__ method accepts args for dishName, proteinChoice,
+    # side, price. It initializes the data attributes
+    # with these values
+    
+    def __init__ (self, dishType, proteinChoice, side, price):
+        self.__dishType = dishType
+        self.__proteinChoice = proteinChoice
+        self.__side = side
+        self.__price = price
+
+    # the following methods are mutators for the
+    # class's data attributes
+
+    def set_dishType(self, dishType):
+        self.__dishType = dishType
+
+    def set_proteinChoice(self, proteinChoice):
+        self.__proteinChoice = proteinChoice
+
+    def set_side(self, side):
+        self.__side = side
+
+    def set_price(self, price):
+        self.__price = price
+
+    # the following methods are accessors for the
+    # class's data attributes
+
+    def get_dishType(self):
+        return self.__dishType
+
+    def get_proteinChoice(self):
+        return self.__proteinChoice
+
+    def get_side(self):
+        return self.__side
+
+    def get_price(self):
+        return self.__price
+
+# The Smothered class represents the a dishtype with sauce over it. It is 
+# a subclass of the Food class
+
+class Smothered(Food):
+    # __init__ method accepts args for Food's dishName, 
+    # proteinChoice, side, price, and sauce.
+    
+    def __init__(self, dishType, proteinChoice, sauce, side, price):
+        # Call the superclasse's __init__ method and pass the required
+        # arguments. Note that we also have to pass self as an argument.
+        Food.__init__(self, dishType, proteinChoice, side, price)
+
+        # initialize the __sauce attribute
+        self.__sauce = sauce
+
+    # the set_sauce method is the mutator for the
+    # __sauce attribute
+
+    def set_sauce(self, sauce):
+        self.__sauce = sauce
+
+    # the get_sauce method is the accessor for the
+    # __sauce attribute
+
+    def get_sauce(self):
+        return self.__sauce
+
+    # the __str__ method
+    def __str__(self):
+        return "Dish Type: " + self.__dishType + "\n Protein Choice: " + self.__proteinChoice + "\nSauce: " + self.__sauce + "\nSide: " + self.__side + "\nPrice: " + self.__price 
